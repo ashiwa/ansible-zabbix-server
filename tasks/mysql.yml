@@ -2,7 +2,7 @@
 # task file for mysql
 - name: "Set the correct delegated_dbhost (to support MySQL db deployment on a remote dbhost)"
   set_fact:
-    delegated_dbhost: "{{ zabbix_server_dbhost if (zabbix_server_dbhost != 'localhost') else inventory_hostname}}"
+    delegated_dbhost: "{{inventory_hostname}}"
 
 - name: "MySQL | Create database"
   mysql_db:
@@ -12,7 +12,7 @@
     state: present
   when: zabbix_database_creation
   register: zabbix_database_created
-  delegate_to: "{{ delegated_dbhost }}"
+#  delegate_to: "{{ delegated_dbhost }}"
   tags:
     - zabbix-server
     - database
@@ -25,7 +25,7 @@
     priv: "{{ zabbix_server_dbname }}.*:ALL"
     state: present
   when: zabbix_database_creation
-  delegate_to: "{{ delegated_dbhost }}"
+#  delegate_to: "{{ delegated_dbhost }}"
   tags:
     - zabbix-server
     - database
@@ -60,7 +60,7 @@
     - zabbix_version | version_compare('3.0', '>=')
     - zabbix_database_sqlload
     - not done_file.stat.exists
-  delegate_to: "{{ delegated_dbhost }}"
+#  delegate_to: "{{ delegated_dbhost }}"
   tags:
     - zabbix-server
     - database
@@ -127,7 +127,7 @@
     - zabbix_version | version_compare('3.0', '<')
     - zabbix_database_sqlload
     - not sql_files_executed[item.item].exists
-  delegate_to: "{{ delegated_dbhost }}"
+#  delegate_to: "{{ delegated_dbhost }}"
   tags:
     - zabbix-server
     - database
