@@ -41,6 +41,9 @@ zabbix_server_dbuser: zabbix-server
 zabbix_server_dbpassword: zabbix-server
 zabbix_server_dbsocket:
 zabbix_server_dbport: 5432
+zabbix_server_mysql_login_host: 
+zabbix_server_mysql_login_user: 
+zabbix_server_mysql_login_password: 
 zabbix_server_startpollers: 5
 zabbix_server_startipmipollers: 0
 zabbix_server_startpollersunreachable: 1
