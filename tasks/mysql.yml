@@ -3,6 +3,12 @@
 - name: "Set the correct delegated_dbhost (to support MySQL db deployment on a remote dbhost)"
   set_fact:
     delegated_dbhost: "{{ zabbix_server_dbhost if (zabbix_server_dbhost != 'localhost') else inventory_hostname}}"
+  when: inventory_hostname != 'localhost'
+  
+- name: "Set the correct delegated_dbhost (delegated_dbhost=localhost)"
+  set_fact:
+    delegated_dbhost: localhost
+  when: inventory_hostname == 'localhost'
 
 - name: "MySQL | Create database"
   mysql_db:
