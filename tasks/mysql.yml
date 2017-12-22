@@ -1,13 +1,13 @@
 ---
 # task file for mysql
-- name: "Set the correct delegated_dbhost (to support MySQL db deployment on a remote dbhost)"
+- name: "Set the correct delegated_host (to support MySQL db deployment on a remote dbhost)"
   set_fact:
-    delegated_dbhost: "{{ zabbix_server_dbhost if (zabbix_server_dbhost != 'localhost') else inventory_hostname}}"
+    delegated_host: "{{ inventory_hostname }}"
   when: inventory_hostname != 'localhost'
-  
-- name: "Set the correct delegated_dbhost (delegated_dbhost=localhost)"
+
+- name: "Set the correct delegated_host (delegated_host=localhost)"
   set_fact:
-    delegated_dbhost: localhost
+    delegated_host: localhost
   when: inventory_hostname == 'localhost'
 
 - name: "MySQL | Create database"
@@ -21,7 +21,7 @@
     state: present
   when: zabbix_database_creation
   register: zabbix_database_created
-  delegate_to: "{{ delegated_dbhost }}"
+  delegate_to: "{{ delegated_host }}"
   tags:
     - zabbix-server
     - database
@@ -37,7 +37,7 @@
     login_password: "{{ zabbix_server_mysql_login_password | default(omit) }}"
     state: present
   when: zabbix_database_creation
-  delegate_to: "{{ delegated_dbhost }}"
+  delegate_to: "{{ delegated_host }}"
   tags:
     - zabbix-server
     - database
@@ -75,7 +75,7 @@
     - zabbix_version | version_compare('3.0', '>=')
     - zabbix_database_sqlload
     - not done_file.stat.exists
-  delegate_to: "{{ delegated_dbhost }}"
+  delegate_to: "{{ delegated_host }}"
   tags:
     - zabbix-server
     - database
@@ -145,7 +145,7 @@
     - zabbix_version | version_compare('3.0', '<')
     - zabbix_database_sqlload
     - not sql_files_executed[item.item].exists
-  delegate_to: "{{ delegated_dbhost }}"
+  delegate_to: "{{ delegated_host }}"
   tags:
     - zabbix-server
     - database
